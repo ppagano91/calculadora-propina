@@ -21,22 +21,34 @@ export const orderReducer = (
     action: OrderActions
 ) => {
     if (action.type === 'add-item') {
+        const itemExist = state.order.find(orderItem => orderItem.id === action.payload.item.id);
+        let updatedOrder: OrderItem[] = [];
+        if (itemExist){
+            updatedOrder = state.order.map(orderItem => orderItem.id === action.payload.item.id ? {...orderItem, quantity: orderItem.quantity + 1} : orderItem);
+        }else{
+            const newOrder: OrderItem = {...action.payload.item, quantity: 1};
+            updatedOrder = [...state.order, newOrder];
+        }
 
-        return {...state}
+        return {...state, order: updatedOrder}
     }
 
     if (action.type === 'remove-item') {
-
-        return {...state}
+        const order = state.order.filter(item => item.id !== action.payload.id)
+        return {...state, order}
     }
 
     if (action.type === 'place-order') {
 
-        return {...state}
+        console.log("TODO: Guardar Orden")
+
+        return {...state, order: [], tip: 0}
     }
 
     if (action.type === 'add-tip') {
-
-        return {...state}
+        const tip = action.payload.value;
+        return {...state, tip}
     }
+
+    return {...state}
 }
